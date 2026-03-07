@@ -102,24 +102,50 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 1,
             ease: 'power4.out'
         }, "-=0.5")
-        .from('.hero p', {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: 'power4.out'
-        }, "-=0.8")
-        .from('.cta-btn', {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: 'power4.out'
-        }, "-=0.8");
+        .fromTo('.hero p', 
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, ease: 'power4.out' }, 
+            "-=0.8"
+        )
+        .fromTo('.hero .cta-btn', 
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, ease: 'power4.out' }, 
+            "-=0.8"
+        );
 
     // Scroll Animations
     gsap.utils.toArray('.service-category').forEach(card => {
         gsap.to(card, {
             scrollTrigger: {
                 trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: "power2.out"
+        });
+    });
+
+    gsap.utils.toArray('.academy-card').forEach(card => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none reverse"
+            },
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: "power2.out"
+        });
+    });
+
+    gsap.utils.toArray('.feature-box').forEach(box => {
+        gsap.to(box, {
+            scrollTrigger: {
+                trigger: box,
                 start: "top 85%",
                 toggleActions: "play none none reverse"
             },
@@ -154,30 +180,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const filterValue = btn.getAttribute('data-filter');
 
             serviceCategories.forEach(category => {
+                gsap.killTweensOf(category); // Stop any ongoing animations
+
                 if (filterValue === 'all' || category.getAttribute('data-category') === filterValue) {
-                    gsap.to(category, {
-                        display: 'block',
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.4,
-                        ease: 'power2.out',
-                        onStart: () => { category.style.display = 'block'; }
-                    });
+                    category.style.display = 'inline-block';
+                    gsap.fromTo(category, 
+                        { opacity: 0, scale: 0.95 },
+                        { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' }
+                    );
                 } else {
-                    gsap.to(category, {
-                        opacity: 0,
-                        scale: 0.8,
-                        duration: 0.4,
-                        ease: 'power2.in',
-                        onComplete: () => { category.style.display = 'none'; }
-                    });
+                    category.style.display = 'none';
                 }
             });
 
             // Re-refresh scroll trigger after filtering
             setTimeout(() => {
                 ScrollTrigger.refresh();
-            }, 500);
+            }, 100);
         });
     });
 
